@@ -3,7 +3,10 @@ import streamlit as st
 from dotenv import load_dotenv
 import os
 
-load_dotenv()  # load OPENAI_API_KEY from .env
+if "OPENAI_API_KEY" in st.secrets:
+    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+else:
+    load_dotenv() 
 
 # ---------------------------
 # LangChain imports
@@ -175,5 +178,6 @@ for idx, q in enumerate(sample_questions):
         # Display answer immediately
         st.markdown("### 💬 Answer:")
         st.write(result)
+
 
 
