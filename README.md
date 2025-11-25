@@ -48,7 +48,3 @@ The chatbot provides interactive, context-aware answers to questions based on th
 - Chatbot knowledge is derived from papers on *“Attention is All You Need”*.  
 - Text is split into token chunks, embedded, and stored for retrieval.  
 - No external data is used; answers are strictly based on the uploaded content.
-
-
-git clone <repo_url>
-cd <repo_folder>
