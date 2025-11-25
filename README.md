@@ -1,4 +1,4 @@
-# Attention is All You Need – RA Chatbot
+# Attention is All You Need – Chatbot
 
 This project is a **Streamlit-based chatbot** designed to answer questions about the concepts and content from *“Attention is All You Need”*. It leverages **Retrieval-Augmented Generation (RAG)** using **LangChain**, **OpenAI LLMs**, and **Chroma vector stores**.
 
