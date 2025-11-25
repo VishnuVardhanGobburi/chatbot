@@ -3,10 +3,18 @@ import streamlit as st
 from dotenv import load_dotenv
 import os
 
+# For Streamlit Cloud
 if "OPENAI_API_KEY" in st.secrets:
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 else:
-    load_dotenv() 
+    # Local development fallback
+    load_dotenv()  # make sure OPENAI_API_KEY is in your local .env
+
+# Verify that the key is set
+if "OPENAI_API_KEY" not in os.environ or not os.environ["OPENAI_API_KEY"]:
+    st.error("OPENAI_API_KEY is not set! Set it in .env (local) or Streamlit Secrets (cloud).")
+    st.stop()
+
 
 # ---------------------------
 # LangChain imports
@@ -178,6 +186,7 @@ for idx, q in enumerate(sample_questions):
         # Display answer immediately
         st.markdown("### 💬 Answer:")
         st.write(result)
+
 
 
 
