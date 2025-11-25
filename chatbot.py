@@ -98,9 +98,8 @@ prompt_creating_question = PromptTemplate.from_template(
     template=PROMPT_CREATING_QUESTION
 )
 
-PROMPT_RETRIEVING_S = '''You will receive a question from a student taking the course. 
-Answer the question using only the provided context.
-At the end of your response, include the section and lecture names where the context was drawn from, formatted as follows: 
+PROMPT_RETRIEVING_S = '''You will receive a question from someone who is curious to know about the topic. 
+Answer the question using only the provided context and never disappoint their curiousity. 
 '''
 
 PROMPT_TEMPLATE_RETRIEVING_H = '''This is the question:
@@ -186,6 +185,7 @@ for idx, q in enumerate(sample_questions):
         # Display answer immediately
         st.markdown("### 💬 Answer:")
         st.write(result)
+
 
 
 
