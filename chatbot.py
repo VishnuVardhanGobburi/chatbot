@@ -3,17 +3,7 @@ import streamlit as st
 from dotenv import load_dotenv
 import os
 
-#For Streamlit Cloud
-# if "OPENAI_API_KEY" in st.secrets:
-#     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-# else:
-#     # Local development fallback
-#     load_dotenv()  # make sure OPENAI_API_KEY is in your local .env
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-# Verify that the key is set
-if "OPENAI_API_KEY" not in os.environ or not os.environ["OPENAI_API_KEY"]:
-    st.error("OPENAI_API_KEY is not set! Set it in .env (local) or Streamlit Secrets (cloud).")
-    st.stop()
 
 
 # ---------------------------
@@ -28,9 +18,6 @@ from langchain_core.runnables import RunnablePassthrough, RunnableLambda, chain
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_chroma.vectorstores import Chroma
 
-# ---------------------------
-# Streamlit UI
-# ---------------------------
 st.set_page_config(page_title="Attention is all you need", layout="wide")
 st.title("Attention 👀......is all you need")
 
@@ -38,9 +25,7 @@ st.title("Attention 👀......is all you need")
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# ---------------------------
 # Load local PDFs
-# ---------------------------
 pdf_folder = "./"  # same folder as script
 all_docs = []
 
@@ -53,9 +38,7 @@ for filename in os.listdir(pdf_folder):
 # Concatenate all PDF content
 string_list_concat = "".join([doc.page_content for doc in all_docs])
 
-# ---------------------------
 # Split by Markdown headers
-# ---------------------------
 md_splitter = MarkdownHeaderTextSplitter(
     headers_to_split_on=[("#", "Section Title"), ("##", "Lecture Title")]
 )
@@ -68,9 +51,7 @@ for doc in docs_list_md_split:
     if "Lecture Title" not in doc.metadata:
         doc.metadata["Lecture Title"] = "Unknown Lecture"
 
-# ---------------------------
 # Split into smaller chunks
-# ---------------------------
 token_splitter = TokenTextSplitter(
     encoding_name="cl100k_base",
     chunk_size=500,
@@ -78,16 +59,12 @@ token_splitter = TokenTextSplitter(
 )
 docs_list_tokens_split = token_splitter.split_documents(docs_list_md_split)
 
-# ---------------------------
 # Create embeddings and vectorstore
-# ---------------------------
 embedding = OpenAIEmbeddings(model="text-embedding-3-small")
 vectorstore = Chroma.from_documents(documents=docs_list_tokens_split, embedding=embedding)
 retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={"k": 2, "lambda_mult": 0.7})
 
-# ---------------------------
 # LLM and Prompts
-# ---------------------------
 chat = ChatOpenAI(model_name="gpt-4o-mini", seed=365, temperature=0)
 str_output_parser = StrOutputParser()
 
@@ -113,9 +90,7 @@ prompt_retrieving_s = SystemMessage(content=PROMPT_RETRIEVING_S)
 prompt_template_retrieving_h = HumanMessagePromptTemplate.from_template(template=PROMPT_TEMPLATE_RETRIEVING_H)
 chat_prompt_template_retrieving = ChatPromptTemplate([prompt_retrieving_s, prompt_template_retrieving_h])
 
-# ---------------------------
 # Format context function (safe)
-# ---------------------------
 @chain
 def format_context(dictionary):
     retrieved_list = dictionary["context"]
@@ -126,9 +101,7 @@ def format_context(dictionary):
     return {"context": formatted_string, "question": dictionary["question"]}
 
 
-# ---------------------------
 # RAG Chain
-# ---------------------------
 chain_retrieving_improved = (
     prompt_creating_question
     | RunnableLambda(lambda x: x.text)
@@ -139,9 +112,7 @@ chain_retrieving_improved = (
     | str_output_parser
 )
 
-# ---------------------------
 # Streamlit Input
-# ---------------------------
 user_question = st.text_area("Ask me something about 'Attention is all you need'", "")
 
 if st.button("Get Answer") and user_question.strip() != "":
@@ -159,14 +130,7 @@ if st.session_state.chat_history:
     for msg in st.session_state.chat_history:
         st.write(msg)
 
-# ---------------------------
 # Streamlit Sidebar: Sample Questions
-# ---------------------------
-# ---------------------------
-# Streamlit Sidebar: Sample Questions
-# ---------------------------
-
-# Sidebar sample questions
 st.sidebar.markdown("### 💡 Sample Questions")
 sample_questions = [
     "What is the self-attention mechanism?",
@@ -185,6 +149,7 @@ for idx, q in enumerate(sample_questions):
         # Display answer immediately
         st.markdown("### 💬 Answer:")
         st.write(result)
+
 
 
 
