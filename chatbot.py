@@ -4,11 +4,12 @@ from dotenv import load_dotenv
 import os
 
 # For Streamlit Cloud
-if "OPENAI_API_KEY" in st.secrets:
-    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-else:
-    # Local development fallback
-    load_dotenv()  # make sure OPENAI_API_KEY is in your local .env
+# if "OPENAI_API_KEY" in st.secrets:
+#     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+# else:
+#     # Local development fallback
+#     load_dotenv()  # make sure OPENAI_API_KEY is in your local .env
+os.environ["OPENAI_API_KEY"] = "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"
 
 # Verify that the key is set
 if "OPENAI_API_KEY" not in os.environ or not os.environ["OPENAI_API_KEY"]:
@@ -186,6 +187,7 @@ for idx, q in enumerate(sample_questions):
         # Display answer immediately
         st.markdown("### 💬 Answer:")
         st.write(result)
+
 
 
 
